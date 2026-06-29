@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>車價查詢系統</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero__badge">Google 試算表資料查詢</div>
+        <h1>車價查詢系統</h1>
+        <p>
+          以手機查詢為主的車輛資訊頁面，支援品牌、車型、年份三層篩選，也可直接搜尋車號。
+        </p>
+      </header>
+
+      <main class="layout">
+        <section class="panel filters-panel" aria-labelledby="filters-title">
+          <div class="panel__heading">
+            <h2 id="filters-title">條件篩選</h2>
+            <button id="resetFilters" class="ghost-button" type="button">清除條件</button>
+          </div>
+
+          <div class="search-grid">
+            <label class="field">
+              <span>車號</span>
+              <input id="plateInput" type="search" placeholder="輸入車號關鍵字" autocomplete="off" />
+            </label>
+
+            <div class="select-row">
+              <label class="field">
+                <span>品牌</span>
+                <select id="brandSelect">
+                  <option value="">全部品牌</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>車型</span>
+                <select id="modelSelect" disabled>
+                  <option value="">全部車型</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="field">
+              <span>年份</span>
+              <select id="yearSelect" disabled>
+                <option value="">全部年份</option>
+              </select>
+            </label>
+          </div>
+
+          <p id="statusMessage" class="status-message" role="status">讀取資料中...</p>
+        </section>
+
+        <section class="results-head">
+          <div>
+            <h2>查詢結果</h2>
+            <p id="resultSummary">共 0 筆資料</p>
+          </div>
+        </section>
+
+        <section id="mobileResults" class="card-list" aria-label="行動版結果列表"></section>
+
+        <section class="panel table-panel" aria-label="桌面版結果表格">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>車號</th>
+                  <th>品牌</th>
+                  <th>車型</th>
+                  <th>年份</th>
+                  <th>排氣量</th>
+                  <th>顏色</th>
+                  <th>里程數</th>
+                  <th>一手車</th>
+                  <th>車況</th>
+                  <th>車況備注</th>
+                  <th>車輛照片</th>
+                  <th>售價</th>
+                  <th>發票</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
