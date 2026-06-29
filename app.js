@@ -416,7 +416,15 @@ function renderMobileCard(row) {
   return `
     <article class="result-card">
       <div class="result-card__head">
-        <div>
+        <div class="result-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 14h14v5a2 2 0 0 1-2 2h-1v-2H8v2H7a2 2 0 0 1-2-2v-5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M7 14 8.7 9.7A2 2 0 0 1 10.56 8h2.88a2 2 0 0 1 1.86 1.7L17 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="8.5" cy="16.5" r="1.2" fill="currentColor"/>
+            <circle cx="15.5" cy="16.5" r="1.2" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="result-card__main">
           <h3 class="result-card__title">${escapeHtml(row.車號)}</h3>
           <p class="result-card__subtitle">${escapeHtml(row.品牌)} / ${escapeHtml(row.車型)} / ${escapeHtml(row.年份)}</p>
         </div>
