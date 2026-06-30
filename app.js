@@ -264,7 +264,7 @@ function normalizeRows(rows) {
         品牌: getFirstValue(row, ["品牌"]) || "-",
         車型: getFirstValue(row, ["車型", "型號"]) || "-",
         年份: rawYear || "-",
-        排氣量: getFirstValue(row, ["排氣量", "cc"]) || "-",
+        排氣量: normalizeDisplacement(getFirstValue(row, ["排氣量", "cc"])) || "-",
         顏色: getFirstValue(row, ["顏色"]) || "-",
         里程數: getFirstValue(row, ["里程數", "里程"]) || "-",
         一手車: normalizeOwnership(getFirstValue(row, ["一手車", "是否一手車", "首手車"])) || "未確認",
@@ -286,6 +286,19 @@ function getFirstValue(row, candidates) {
     }
   }
   return "";
+}
+
+function normalizeDisplacement(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized || normalized.toUpperCase() === "NULL") {
+    return "";
+  }
+
+  if (/^\d+$/.test(normalized)) {
+    return `${normalized}.0`;
+  }
+
+  return normalized;
 }
 
 function normalizeOwnership(value) {
