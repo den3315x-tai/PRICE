@@ -143,6 +143,9 @@ const FIELD_ORDER = [
   "發票",
 ];
 
+const CARD_SUMMARY_FIELDS = ["年份", "品牌", "車型", "里程數", "售價"];
+const CARD_DETAIL_FIELDS = FIELD_ORDER.filter((field) => !CARD_SUMMARY_FIELDS.includes(field));
+
 const dom = {
   plateInput: document.querySelector("#plateInput"),
   brandSelect: document.querySelector("#brandSelect"),
@@ -478,29 +481,50 @@ function renderResults() {
 
 function renderMobileCard(row) {
   return `
-    <article class="result-card">
-      <div class="result-card__head">
-        <div class="result-card__icon" aria-hidden="true">
+    <details class="result-card">
+      <summary class="result-card__summary">
+        <div class="result-card__summary-main">
+          ${CARD_SUMMARY_FIELDS.map((field) => renderSummaryItem(field, row[field])).join("")}
+        </div>
+        <span class="result-card__chevron" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M5 14h14v5a2 2 0 0 1-2 2h-1v-2H8v2H7a2 2 0 0 1-2-2v-5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-            <path d="M7 14 8.7 9.7A2 2 0 0 1 10.56 8h2.88a2 2 0 0 1 1.86 1.7L17 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="8.5" cy="16.5" r="1.2" fill="currentColor"/>
-            <circle cx="15.5" cy="16.5" r="1.2" fill="currentColor"/>
+            <path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+        </span>
+      </summary>
+      <div class="result-card__details">
+        <div class="result-card__head">
+          <div class="result-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M5 14h14v5a2 2 0 0 1-2 2h-1v-2H8v2H7a2 2 0 0 1-2-2v-5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M7 14 8.7 9.7A2 2 0 0 1 10.56 8h2.88a2 2 0 0 1 1.86 1.7L17 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="8.5" cy="16.5" r="1.2" fill="currentColor"/>
+              <circle cx="15.5" cy="16.5" r="1.2" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="result-card__main">
+            <h3 class="result-card__title">${escapeHtml(row.車號)}</h3>
+            <p class="result-card__subtitle">${escapeHtml(row.品牌)} / ${escapeHtml(row.車型)} / ${escapeHtml(row.年份)}</p>
+          </div>
+          <div class="price-chip price-chip--emphasis">
+            <span>售價</span>
+            <strong>${escapeHtml(row.售價)}</strong>
+          </div>
         </div>
-        <div class="result-card__main">
-          <h3 class="result-card__title">${escapeHtml(row.車號)}</h3>
-          <p class="result-card__subtitle">${escapeHtml(row.品牌)} / ${escapeHtml(row.車型)} / ${escapeHtml(row.年份)}</p>
-        </div>
-        <div class="price-chip price-chip--emphasis">
-          <span>售價</span>
-          <strong>${escapeHtml(row.售價)}</strong>
+        <div class="result-card__grid">
+          ${CARD_DETAIL_FIELDS.map((field) => renderMetaItem(field, row[field], field === "車況備注")).join("")}
         </div>
       </div>
-      <div class="result-card__grid">
-        ${FIELD_ORDER.map((field) => renderMetaItem(field, row[field], field === "車況備注")).join("")}
-      </div>
-    </article>
+    </details>
+  `;
+}
+
+function renderSummaryItem(label, value) {
+  return `
+    <div class="summary-item">
+      <span class="summary-item__label">${escapeHtml(label)}</span>
+      <span class="summary-item__value ${statusClass(label, value)}">${escapeHtml(value || "-")}</span>
+    </div>
   `;
 }
 
