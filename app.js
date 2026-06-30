@@ -19,6 +19,7 @@ const SAMPLE_ROWS = [
     車輛照片: "https://example.com/car-1",
     售價: "35.8萬",
     發票: "有",
+    已買進日: "2025/12/03",
   },
   {
     車號: "BDE-7788",
@@ -34,6 +35,7 @@ const SAMPLE_ROWS = [
     車輛照片: "https://example.com/car-2",
     售價: "69.8萬",
     發票: "有",
+    已買進日: "2026/01/18",
   },
   {
     車號: "KLM-2456",
@@ -49,6 +51,7 @@ const SAMPLE_ROWS = [
     車輛照片: "https://example.com/car-3",
     售價: "42.5萬",
     發票: "無",
+    已買進日: "2025/08/27",
   },
   {
     車號: "PLQ-9001",
@@ -62,8 +65,9 @@ const SAMPLE_ROWS = [
     車況: "B",
     車況備注: "里程透明，可第三方鑑定",
     車輛照片: "https://example.com/car-4",
-    售價: "56.8萬",
+    售價: null,
     發票: "有",
+    已買進日: "2025/05/11",
   },
   {
     車號: "AAA-1111",
@@ -79,6 +83,7 @@ const SAMPLE_ROWS = [
     車輛照片: "https://photos.app.goo.gl/KNLX9V7nBjiq4MYb8",
     售價: "49.9",
     發票: "F",
+    已買進日: "2026/03/12",
   },
   {
     車號: "TTT-2020",
@@ -88,12 +93,13 @@ const SAMPLE_ROWS = [
     排氣量: "1.8",
     顏色: "銀",
     里程數: "2.1",
-    一手車: "Y",
+    一手車: null,
     車況: "A",
     車況備注: "原廠保養",
     車輛照片: "https://example.com/car-5",
     售價: "52.8",
     發票: "有",
+    已買進日: "2026/02/06",
   },
   {
     車號: "HHH-7788",
@@ -109,6 +115,7 @@ const SAMPLE_ROWS = [
     車輛照片: "https://example.com/car-6",
     售價: "63.5",
     發票: "無",
+    已買進日: "2025/10/21",
   },
   {
     車號: "MZD-4321",
@@ -118,12 +125,13 @@ const SAMPLE_ROWS = [
     排氣量: "2.0",
     顏色: "藍",
     里程數: "4.6",
-    一手車: "N",
+    一手車: "NULL",
     車況: "A",
     車況備注: "配備完整",
     車輛照片: "https://example.com/car-7",
     售價: "58.8",
     發票: "F",
+    已買進日: "2026/04/08",
   },
 ];
 
@@ -209,8 +217,11 @@ function bindEvents() {
   });
 
   dom.searchButton.addEventListener("click", () => {
-    if (!state.filters.brand || !state.filters.model) {
-      setStatus("請先選擇品牌與車型，再進行查詢。");
+    const hasPlateKeyword = Boolean(state.filters.plate);
+    const hasBrandAndModel = Boolean(state.filters.brand && state.filters.model);
+
+    if (!hasPlateKeyword && !hasBrandAndModel) {
+      setStatus("請先選擇品牌與車型，或直接輸入車號關鍵字查詢。");
       state.hasSearched = false;
       renderResults();
       return;
@@ -225,7 +236,7 @@ function bindEvents() {
     state.hasSearched = false;
     dom.plateInput.value = "";
     syncFilterOptions();
-    setStatus(`資料已載入，共 ${state.rows.length} 筆，請選擇品牌與車型後查詢。`);
+    setStatus(`資料已載入，共 ${state.rows.length} 筆，請選擇品牌與車型或輸入車號後查詢。`);
     renderResults();
   });
 }
@@ -259,12 +270,13 @@ function normalizeRows(rows) {
         排氣量: getFirstValue(row, ["排氣量", "cc"]) || "-",
         顏色: getFirstValue(row, ["顏色"]) || "-",
         里程數: getFirstValue(row, ["里程數", "里程"]) || "-",
-        一手車: normalizeOwnership(getFirstValue(row, ["一手車", "是否一手車", "首手車"])) || "-",
-        車況: getFirstValue(row, ["車況"]) || "-",
-        車況備注: getFirstValue(row, ["車況備注", "車況備註", "備注", "備註"]) || "-",
+        一手車: normalizeOwnership(getFirstValue(row, ["一手車", "是否一手車", "首手車"])) || "未確認",
+        車況: normalizeNullDisplay(getFirstValue(row, ["車況"])) || "-",
+        車況備注: normalizeNullDisplay(getFirstValue(row, ["車況備注", "車況備註", "備注", "備註"])) || "-",
         車輛照片: getFirstValue(row, ["車輛照片", "照片", "圖片", "照片網址", "圖片網址"]) || "-",
-        售價: getFirstValue(row, ["售價", "價格"]) || "-",
-        發票: getFirstValue(row, ["發票", "F"]) || "-",
+        售價: normalizePrice(getFirstValue(row, ["售價", "價格"])) || "未開價",
+        發票: normalizeNullDisplay(getFirstValue(row, ["發票", "F"])) || "-",
+        __boughtDate: normalizeBoughtDate(getFirstValue(row, ["已買進日", "買進日", "購入日"])),
       };
     })
     .filter((row) => row.車號 !== "-" || row.品牌 !== "-" || row.車型 !== "-");
@@ -281,10 +293,44 @@ function getFirstValue(row, candidates) {
 
 function normalizeOwnership(value) {
   const normalized = String(value || "").trim().toUpperCase();
+  if (!normalized || normalized === "NULL") {
+    return "未確認";
+  }
   if (normalized === "Y" || normalized === "N") {
     return normalized;
   }
   return normalized;
+}
+
+function normalizePrice(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized || normalized.toUpperCase() === "NULL") {
+    return "未開價";
+  }
+  return normalized;
+}
+
+function normalizeNullDisplay(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized || normalized.toUpperCase() === "NULL") {
+    return "";
+  }
+  return normalized;
+}
+
+function normalizeBoughtDate(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized || normalized.toUpperCase() === "NULL") {
+    return 0;
+  }
+
+  const dateMatch = normalized.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})$/);
+  if (dateMatch) {
+    const [, year, month, day] = dateMatch;
+    return Number(`${year}${month.padStart(2, "0")}${day.padStart(2, "0")}`);
+  }
+
+  return 0;
 }
 
 function syncFilterOptions() {
@@ -380,13 +426,19 @@ function toDisplayYear(rawYear) {
 }
 
 function applyFilters() {
-  state.filteredRows = state.rows.filter((row) => {
-    const byPlate = !state.filters.plate || row.車號.toUpperCase().includes(state.filters.plate);
-    const byBrand = row.品牌 === state.filters.brand;
-    const byModel = row.車型 === state.filters.model;
-    const byYear = !state.filters.year || toDisplayYear(row.年份) === state.filters.year;
-    return byPlate && byBrand && byModel && byYear;
-  });
+  const hasPlateKeyword = Boolean(state.filters.plate);
+  const hasBrandFilter = Boolean(state.filters.brand);
+  const hasModelFilter = Boolean(state.filters.model);
+
+  state.filteredRows = state.rows
+    .filter((row) => {
+      const byPlate = !hasPlateKeyword || row.車號.toUpperCase().includes(state.filters.plate);
+      const byBrand = !hasBrandFilter || row.品牌 === state.filters.brand;
+      const byModel = !hasModelFilter || row.車型 === state.filters.model;
+      const byYear = !state.filters.year || toDisplayYear(row.年份) === state.filters.year;
+      return byPlate && byBrand && byModel && byYear;
+    })
+    .sort((a, b) => (b.__boughtDate || 0) - (a.__boughtDate || 0));
 
   setStatus(`資料已載入，共 ${state.rows.length} 筆，查詢結果 ${state.filteredRows.length} 筆。`);
   renderResults();
@@ -395,8 +447,8 @@ function applyFilters() {
 function renderResults() {
   if (!state.hasSearched) {
     dom.resultSummary.textContent = "尚未查詢";
-    dom.mobileResults.innerHTML = '<div class="empty-state">請先選擇品牌與車型，再按下查詢。</div>';
-    dom.tableBody.innerHTML = '<tr><td colspan="13">請先選擇品牌與車型，再按下查詢。</td></tr>';
+    dom.mobileResults.innerHTML = '<div class="empty-state">請先選擇品牌與車型，或直接輸入車號關鍵字後查詢。</div>';
+    dom.tableBody.innerHTML = '<tr><td colspan="13">請先選擇品牌與車型，或直接輸入車號關鍵字後查詢。</td></tr>';
     return;
   }
 
@@ -428,7 +480,7 @@ function renderMobileCard(row) {
           <h3 class="result-card__title">${escapeHtml(row.車號)}</h3>
           <p class="result-card__subtitle">${escapeHtml(row.品牌)} / ${escapeHtml(row.車型)} / ${escapeHtml(row.年份)}</p>
         </div>
-        <div class="price-chip">
+        <div class="price-chip price-chip--emphasis">
           <span>售價</span>
           <strong>${escapeHtml(row.售價)}</strong>
         </div>
@@ -488,6 +540,9 @@ function statusClass(label, value) {
   }
   if (label === "車況" && /^B$/i.test(String(value || ""))) {
     return "tag-warn";
+  }
+  if (label === "售價") {
+    return "price-emphasis";
   }
   return "";
 }
