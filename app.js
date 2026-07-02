@@ -503,8 +503,8 @@ function resolveVehicleColorPalette(color) {
   const value = String(color || "").trim();
   const palettes = [
     { keys: ["黑"], a: "#4a4d48", b: "#222421", text: "#ffffff", border: "rgba(0, 0, 0, 0.22)", openA: "#2f312e", openB: "#111211", openText: "#ffffff" },
-    { keys: ["白"], a: "#fbfbf1", b: "#dfe3d5", text: "#3e463b", border: "rgba(112, 121, 104, 0.34)", openA: "#e8ebdf", openB: "#cfd6c4", openText: "#354034" },
-    { keys: ["銀", "灰"], a: "#d7ddd6", b: "#aeb7ad", text: "#334033", border: "rgba(93, 102, 92, 0.28)", openA: "#b7c0b6", openB: "#7f8b80", openText: "#ffffff" },
+    { keys: ["白"], a: "#f2f1e6", b: "#c7cebe", text: "#263021", border: "rgba(71, 82, 66, 0.58)", openA: "#d6dbc9", openB: "#99a58e", openText: "#22301f" },
+    { keys: ["銀", "灰"], a: "#aeb8ad", b: "#717d73", text: "#ffffff", border: "rgba(67, 78, 69, 0.44)", openA: "#7f8a80", openB: "#4e5a51", openText: "#ffffff" },
     { keys: ["藍"], a: "#6f95b3", b: "#3f6f94", text: "#ffffff", border: "rgba(34, 78, 108, 0.28)", openA: "#4d7798", openB: "#2d5572", openText: "#ffffff" },
     { keys: ["紅"], a: "#c76a60", b: "#9a3d35", text: "#ffffff", border: "rgba(120, 39, 33, 0.25)", openA: "#a94f46", openB: "#772c27", openText: "#ffffff" },
     { keys: ["黃", "金"], a: "#e8c96b", b: "#c99b31", text: "#433617", border: "rgba(138, 101, 22, 0.28)", openA: "#d4aa3f", openB: "#a9781f", openText: "#ffffff" },
