@@ -24,7 +24,7 @@ const SAMPLE_ROWS = [
   },
   {
     買進日: "2026-06-29",
-    來源: "B 朝欽 23",
+    來源: "M 朝欽 23",
     車號: "RDS-1577",
     品牌: "FORD",
     車型: "KUGA",
@@ -174,11 +174,12 @@ function normalizeRows(rows) {
   return rows
     .map((row) => {
       const rawBuyDate = getFirstValue(row, ["買進日", "已買進日", "購入日"]);
+      const rawSource = getFirstValue(row, ["來源", "資料來源"]);
       const rawYear = getFirstValue(row, ["年份", "年式"]);
 
       return {
         買進日: normalizeNullDisplay(rawBuyDate) || "-",
-        來源: normalizeNullDisplay(getFirstValue(row, ["來源", "資料來源"])) || "-",
+        來源: formatSourceDisplay(rawSource),
         車號: getFirstValue(row, ["車號", "車牌", "牌照"]) || "-",
         品牌: getFirstValue(row, ["品牌"]) || "-",
         車型: getFirstValue(row, ["車型", "型號"]) || "-",
@@ -206,6 +207,36 @@ function getFirstValue(row, candidates) {
     }
   }
   return "";
+}
+
+function formatSourceDisplay(value) {
+  const normalized = normalizeNullDisplay(value);
+  if (!normalized) {
+    return "-";
+  }
+
+  if (/^B(?:\s|$)/i.test(normalized)) {
+    return "老闆";
+  }
+  if (/^M(?:\s|$)/i.test(normalized)) {
+    return "經理";
+  }
+
+  const sourceNameMap = {
+    君翰: "君翰",
+    書涵: "書涵",
+    黛儒: "黛儒",
+    揚傑: "揚傑",
+    阿池: "池哥",
+    欣碩: "欣碩",
+  };
+
+  const matchedName = Object.keys(sourceNameMap).find((name) => normalized.startsWith(name));
+  if (matchedName) {
+    return sourceNameMap[matchedName];
+  }
+
+  return normalized;
 }
 
 function normalizeDisplacement(value) {
