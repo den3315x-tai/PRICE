@@ -26,6 +26,10 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 18px;
+}
+
 html,
 body {
   margin: 0;
@@ -36,6 +40,7 @@ body {
   font-family: "Noto Sans TC", sans-serif;
   color: var(--text);
   background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 100%);
+  line-height: 1.55;
 }
 
 button,
@@ -79,7 +84,7 @@ select {
 
 .filters-title {
   margin: 0 0 16px;
-  font-size: 1.18rem;
+  font-size: 1.32rem;
   color: #eef3e8;
 }
 
@@ -91,14 +96,14 @@ select {
 
 .results-head__summary p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.12rem;
   font-weight: 800;
   color: #eff3ea;
 }
 
 .results-head__icon {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   color: #d9dfd2;
 }
 
@@ -120,7 +125,7 @@ select {
   background: linear-gradient(180deg, #71796f, #636b61);
   color: #ffffff;
   border-radius: 12px;
-  padding: 12px 20px;
+  padding: 13px 20px;
   font-weight: 800;
   box-shadow: none;
 }
@@ -130,7 +135,7 @@ select {
   background: linear-gradient(180deg, #7b8378, #6c7468);
   color: #ffffff;
   border-radius: 12px;
-  padding: 12px 18px;
+  padding: 13px 18px;
   font-weight: 800;
 }
 
@@ -154,7 +159,7 @@ select {
 }
 
 .field span {
-  font-size: 0.92rem;
+  font-size: 1.04rem;
   font-weight: 700;
   color: #e9eee3;
 }
@@ -162,14 +167,14 @@ select {
 .field input,
 .field select {
   width: 100%;
-  min-height: 48px;
+  min-height: 54px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   padding: 0 14px;
   background: rgba(255, 255, 255, 0.09);
   color: #ffffff;
   outline: none;
-  font-size: 0.96rem;
+  font-size: 1.08rem;
 }
 
 .field input::placeholder {
@@ -194,8 +199,8 @@ select {
   position: absolute;
   left: 14px;
   top: 50%;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   color: rgba(255, 255, 255, 0.62);
   transform: translateY(-50%);
 }
@@ -206,12 +211,12 @@ select {
 }
 
 .search-input input {
-  padding-left: 48px;
+  padding-left: 50px;
 }
 
 .status-message {
   margin: 12px 2px 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: rgba(233, 238, 227, 0.72);
 }
 
@@ -267,20 +272,20 @@ select {
 
 .summary-item {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-columns: 74px minmax(0, 1fr);
   gap: 10px;
   align-items: center;
 }
 
 .summary-item__label {
-  font-size: 0.92rem;
+  font-size: 1.04rem;
   font-weight: 800;
   color: #30402e;
 }
 
 .summary-item__value {
   min-width: 0;
-  font-size: 0.97rem;
+  font-size: 1.1rem;
   font-weight: 700;
   word-break: break-word;
   color: #243123;
@@ -290,13 +295,13 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 92px;
-  padding: 9px 12px;
+  min-width: 98px;
+  padding: 10px 12px;
   border-radius: 999px;
   border: 1px solid rgba(98, 110, 93, 0.18);
   background: linear-gradient(180deg, #d7dccd, #cbd3c0);
   color: #4e5947;
-  font-size: 0.84rem;
+  font-size: 0.96rem;
   font-weight: 800;
   line-height: 1;
   white-space: nowrap;
@@ -329,26 +334,27 @@ select {
 
 .meta-item {
   display: grid;
-  grid-template-columns: 78px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
   gap: 10px;
   align-items: center;
-  padding: 11px 0;
+  padding: 12px 0;
   border-bottom: 1px solid rgba(145, 153, 136, 0.22);
 }
 
 .meta-item--full {
-  grid-template-columns: 78px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
 }
 
 .meta-item__label {
   display: block;
   color: #41503c;
-  font-size: 0.94rem;
+  font-size: 1.05rem;
   font-weight: 800;
 }
 
 .meta-item__value {
   display: block;
+  font-size: 1.08rem;
   font-weight: 500;
   word-break: break-word;
   color: #253222;
@@ -357,7 +363,7 @@ select {
 .photo-link {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
+  min-height: 30px;
   color: var(--link);
   font-weight: 800;
   text-decoration: none;
@@ -407,8 +413,8 @@ thead th {
   background: #4e564b;
   color: #eef2e9;
   text-align: left;
-  padding: 14px 12px;
-  font-size: 0.88rem;
+  padding: 15px 12px;
+  font-size: 1rem;
   border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -417,11 +423,11 @@ thead th:last-child {
 }
 
 tbody td {
-  padding: 14px 12px;
+  padding: 15px 12px;
   border-top: 1px solid rgba(122, 131, 115, 0.18);
   border-right: 1px solid rgba(122, 131, 115, 0.12);
   vertical-align: top;
-  font-size: 0.94rem;
+  font-size: 1.06rem;
   color: #2c3729;
 }
 
@@ -454,7 +460,9 @@ tbody tr:nth-child(even) {
 
 .price-emphasis {
   color: var(--price);
-  font-weight: 800;
+  font-size: 1.22em;
+  font-weight: 900;
+  line-height: 1.15;
 }
 
 @media (min-width: 760px) {
@@ -492,12 +500,12 @@ tbody tr:nth-child(even) {
   }
 
   .results-head__summary p {
-    font-size: 0.95rem;
+    font-size: 1.04rem;
   }
 
   .results-sort {
     padding: 8px 12px;
-    font-size: 0.88rem;
+    font-size: 0.98rem;
   }
 
   .result-card__summary {
