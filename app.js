@@ -108,6 +108,10 @@ async function bootstrap() {
 function bindEvents() {
   dom.plateInput.addEventListener("input", (event) => {
     state.filters.plate = event.target.value.trim().toUpperCase();
+
+    if (state.filters.plate) {
+      clearDropdownFilters();
+    }
   });
 
   dom.brandSelect.addEventListener("change", (event) => {
@@ -129,6 +133,11 @@ function bindEvents() {
 
   dom.searchButton.addEventListener("click", () => {
     const hasPlateKeyword = Boolean(state.filters.plate);
+
+    if (hasPlateKeyword) {
+      clearDropdownFilters();
+    }
+
     const hasBrandAndModel = Boolean(state.filters.brand && state.filters.model);
 
     if (!hasPlateKeyword && !hasBrandAndModel) {
@@ -150,6 +159,17 @@ function bindEvents() {
     setStatus(`資料已載入，共 ${state.rows.length} 筆，請選擇品牌與車型或輸入車號後查詢。`);
     renderResults();
   });
+}
+
+function clearDropdownFilters() {
+  if (!state.filters.brand && !state.filters.model && !state.filters.year) {
+    return;
+  }
+
+  state.filters.brand = "";
+  state.filters.model = "";
+  state.filters.year = "";
+  syncFilterOptions();
 }
 
 async function loadRows() {
