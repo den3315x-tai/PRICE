@@ -59,7 +59,7 @@ const FIELD_ORDER = [
   "發票",
 ];
 
-const DETAIL_EXTRA_FIELDS = ["8891編號"];
+const DETAIL_EXTRA_FIELDS = ["8891編號", "線上購"];
 const TABLE_FIELD_ORDER = [...FIELD_ORDER, ...DETAIL_EXTRA_FIELDS];
 const DEFAULT_CARD_SUMMARY_FIELDS = ["年份", "車號", "排氣量", "里程數", "售價"];
 const PLATE_SEARCH_CARD_SUMMARY_FIELDS = ["年份", "車號", "車型", "排氣量", "里程數", "售價"];
@@ -255,6 +255,7 @@ function normalizeRows(rows) {
         售價: normalizePrice(getFirstValue(row, ["售價", "價格"])) || "未開價",
         發票: normalizeNullDisplay(getFirstValue(row, ["發票", "F"])) || "-",
         "8891編號": normalizeNullDisplay(getFirstValue(row, ["8891編號", "8891"])) || "-",
+        線上購: normalizeOnlinePurchase(getFirstValue(row, ["線上購", "onbuy"])),
         __buyDateSort: normalizeBuyDateSortValue(rawBuyDate),
         __yearSort: normalizeYearSortValue(rawYear),
       };
@@ -312,6 +313,11 @@ function normalizeDisplacement(value) {
   }
 
   return normalized;
+}
+
+function normalizeOnlinePurchase(value) {
+  const normalized = String(value ?? "").trim().toUpperCase();
+  return ["0", "FALSE", "不可"].includes(normalized) ? "不可" : "可";
 }
 
 function normalizeOwnership(value) {
@@ -514,7 +520,7 @@ function renderResults() {
   if (!state.hasSearched) {
     dom.resultSummary.textContent = "尚未查詢";
     dom.mobileResults.innerHTML = '<div class="empty-state">請先選擇品牌與車型，或直接輸入車號關鍵字後查詢。</div>';
-    dom.tableBody.innerHTML = '<tr><td colspan="17">請先選擇品牌與車型，或直接輸入車號關鍵字後查詢。</td></tr>';
+    dom.tableBody.innerHTML = '<tr><td colspan="18">請先選擇品牌與車型，或直接輸入車號關鍵字後查詢。</td></tr>';
     return;
   }
 
@@ -522,7 +528,7 @@ function renderResults() {
 
   if (state.filteredRows.length === 0) {
     dom.mobileResults.innerHTML = '<div class="empty-state">查無符合條件的車輛資料</div>';
-    dom.tableBody.innerHTML = '<tr><td colspan="17">查無符合條件的車輛資料</td></tr>';
+    dom.tableBody.innerHTML = '<tr><td colspan="18">查無符合條件的車輛資料</td></tr>';
     return;
   }
 
@@ -818,3 +824,4 @@ function escapeHtml(value) {
 function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#96;");
 }
+
