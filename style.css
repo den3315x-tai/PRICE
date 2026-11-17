@@ -402,6 +402,12 @@ textarea {
   color: var(--muted);
 }
 
+.listing-link {
+  color: var(--link);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 .table-panel {
   display: none;
   padding: 0;

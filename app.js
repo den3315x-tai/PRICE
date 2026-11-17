@@ -760,7 +760,7 @@ function renderMetaItem(label, value, isFull) {
   return `
     <div class="meta-item ${isFull ? "meta-item--full" : ""}">
       <span class="meta-item__label">${escapeHtml(label)}</span>
-      <span class="meta-item__value ${statusClass(label, value)}">${escapeHtml(value || "-")}</span>
+      <span class="meta-item__value ${statusClass(label, value)}">${renderResultValue(label, value)}</span>
     </div>
   `;
 }
@@ -768,15 +768,22 @@ function renderMetaItem(label, value, isFull) {
 function renderTableRow(row, index) {
   return `
     <tr>
-      ${TABLE_FIELD_ORDER.map((field) => `<td class="${statusClass(field, row[field])}">${renderTableCell(field, row[field])}</td>`).join("")}
+      ${TABLE_FIELD_ORDER.map((field) => `<td class="${statusClass(field, row[field])}">${renderResultValue(field, row[field])}</td>`).join("")}
       <td><button class="reserve-button reserve-button--table" type="button" data-reserve-index="${index}">收訂</button></td>
     </tr>
   `;
 }
 
-function renderTableCell(label, value) {
+function renderResultValue(label, value) {
   if (label === "車輛照片") {
     return renderPhotoLink(value);
+  }
+  if (label === "8891編號") {
+    const number = optionalVehicleValue(value);
+    const match = /^S(\d+)$/i.exec(number);
+    if (match) {
+      return `<a class="listing-link" href="https://auto.8891.com.tw/usedauto-userInfos-${match[1]}.html" target="_blank" rel="noopener noreferrer">${escapeHtml(number)}</a>`;
+    }
   }
   return escapeHtml(value || "-");
 }
@@ -824,4 +831,3 @@ function escapeHtml(value) {
 function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#96;");
 }
-
